@@ -1,3 +1,3 @@
-backups/*
-me-only/*
+*/backups/
+*/me-only/
 .gitingore
