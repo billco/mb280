@@ -1,0 +1,27 @@
+
+
+--install wiring PI lib--
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+run rasberrypi config
+ enable i2c & ssh
+ 
+-- install I2C tool set --
+sudo apt-get install -y i2c-tools libi2c-dev
+
+-- install gcc make & lib tools --
+sudo apt-get install automake
+sudo apt-get install autoconf
+sudo apt-get install libtool
+
+-- install Modbus lib 3.1.6--
+git https://github.com/stephane/libmodbus.git
+checkout README.md
+To install, just run the usual dance, `./configure && make install`. Run
+`./autogen.sh` first to generate the `configure` script if required.
+
+sudo ldconfig
+
+-- test out bme2800 on I@C bus --
+sudo i2cdetect -y 1
+you should see address 76 respond

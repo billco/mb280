@@ -1,0 +1,43 @@
+bme280 modbus mapping
+rev 1.0.2 12.24.2021 15:40:59
+
+ -------------------------------------------------------------------
+30,xx  Regs	Read/Write Singal Only					 Usage/Type
+ reset	 0	 bit 0 = reset temp							unt16_t
+ Stats       bit 1 = reset hum
+			 bit 2 = reset press
+ Scal 	 1	 note #								  		int16_t
+ Temp		-1270 - 1270
+ Scal 	 2	 note #										int16_t	  
+ hum		-1270 - 1270
+ Scal 	 3	 note #										int16_t		  
+ pres		-1270 - 1270
+ 
+ -------------------------------------------------------------------
+ 
+40xxx  Regs	Read Only				   Ranges		  Usage/Type
+ HOUR	 0		tm.local.hour			0-23			uint16_t
+ MINIT	 1		tm.local.mintue			0-59			uint16_t
+ SEC	 2		tm.local.sec			0-59			uint16_t
+ TEMP	 3		temperatue F 1/10ths    -1270 - 1270	int16_t
+ HUM	 4		humity % 1/10ths		0 - 1000		int16_t
+ PRES	 5		pressure hPa 1/10ths	8000 - 15600   	int16_t
+ RTEMP	 6		raw temperatue 			 				int16_t
+ RHUM	 7		raw humity % 							int16_t
+ RPRES	 8		raw pressure 						    int16_t
+ MTEMP	 9		*min/low temp 
+ XTEMP	 10		*max/high temp
+ ATEMP	 11		*average (min+max)/2 temp 
+ MHUM	 12		*min/low hum
+ XHUM	 13		*max/high hum 
+ AHUM	 14		*average (min+max)/2 hum 
+ MPRES	 15		*min/low pres
+ XPRES	 16		*max/high pres 
+ APRES	 17		*average (min+max)/2 pres 
+ 
+ -------------------------------------------------------------------
+ 
+ notes: 
+	* since 00:00 or last stats reset
+	# resets stats lo,high,av
+  raw raw instrument value no scal appiled
