@@ -1,2 +1,3 @@
-./backups
-./MeOnly
+backups/*
+me-only/*
+.gitingore
