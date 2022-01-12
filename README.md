@@ -11,5 +11,8 @@ uses
 
 target:
 	slave:	PI4b
+	
+		make
 	client: gcc
 	
+		make client
