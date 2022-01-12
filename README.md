@@ -9,7 +9,7 @@ uses
 	
 	libwiringpi
 
-target:
+target systems:
 
     slave:    PI4b
 	
