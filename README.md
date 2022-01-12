@@ -10,9 +10,11 @@ uses
 	libwiringpi
 
 target:
-	slave:	PI4b
+
+    slave:    PI4b
 	
 		make
-	client: gcc
+		
+    client: gcc
 	
-		make client
+        make client
