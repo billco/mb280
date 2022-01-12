@@ -1,8 +1,8 @@
 // header for slave
 
 #ifndef __m_H__
- 
- 
+
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <time.h>
-  
+
 #include <pthread.h>
 #include <syslog.h>
 
@@ -49,8 +49,8 @@
 #define APRES	 17
 #define LASTREG	 (APRES+1)
 
- // input registers 
- 
+ // input registers
+
 //slave Id 0  regs
 #define LOP_1	 0
 #define ADR_1	 1
@@ -82,17 +82,23 @@
 
 #define OFFSET		6
 
-#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query 
-#define COMMAND 	(1+OFFSET) 	// command offset into query 
-#define REGADR		(3+OFFSET) 	// command offset into query 
-#define REGVAL		(5+OFFSET) 	// command offset into query 
+#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query
+#define COMMAND 	(1+OFFSET) 	// command offset into query
+#define REGADR		(3+OFFSET) 	// command offset into query
+#define REGVAL		(5+OFFSET) 	// command offset into query
 
 #define FUNC6	6	//  modbus funtion write input register
 
 #define MAXLP   5
 
-
-
+/* SRESET bits
+*	0 0x1 -  temp
+* 	1 0x2 - hum
+* 	2 0x4 - pres
+*   3 0x10 - log file
+*
+*
+*/
 typedef struct {
 	int16_t data[LASTREG];		// modbus holding registers
 	int16_t sCal[LASTS];		// modbus input registers
@@ -104,7 +110,7 @@ typedef struct {
 #ifndef MAIN__
 #define ext extern
 #else
-#define ext 
+#define ext
 #endif
 
 
@@ -123,7 +129,7 @@ ext int loog;
 
 void retsetAll( void ) ;
 void  init280(  void );
-int read280( float *temp, float *hum, float *pres);
+int read280( int adr,float *temp, float *hum, float *pres);
 void WriteStat( void );
 void ReadStat( void );
 void WriteDefualts( void );

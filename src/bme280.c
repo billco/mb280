@@ -10,9 +10,10 @@
 
 float pressureToAltitude(float seaLevel, float atmospheric, float temp);
 
-int read280( float *temp, float *hum, float *pres) { 
+int read280( int adr,float *temp, float *hum, float *pres) { 
 
-  int fd = wiringPiI2CSetup(BME280_ADDRESS);
+ // int fd = wiringPiI2CSetup(BME280_ADDRESS);
+  int fd = wiringPiI2CSetup(adr & 0x7f);
   if(fd < 0) {
     printf("Device not found");
     return -1;
