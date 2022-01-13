@@ -1,7 +1,4 @@
 */backups/
-<<<<<<< HEAD
 */me-only/
 */bin/*.o
-=======
-*.o
->>>>>>> e05c1d0184e9193e4501d0ba00098dbade4f6c9d
+updateGit.sh
