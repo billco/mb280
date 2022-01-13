@@ -5,6 +5,6 @@
 pushd .
 
 git add .
-git commit -m "buh.."
+git commit 
 git push
-popd .
+popd 
