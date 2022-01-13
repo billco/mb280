@@ -3,7 +3,7 @@
 #define MAIN__ TRUE
 
 #include "m.h"
-
+ 
 
 static modbus_t *ctx = NULL;
 // modbus_mapping_t *mb_mapping;
@@ -333,8 +333,7 @@ static void Slave(void)
 
                    	// update modbus regs
                    	activeId = query[SLAVEID];
- //printf("activeId = %d\n", activeId );
-                   //	activeId = 0;
+ 
 
                    	if( activeId >= 0 && activeId <= MAXLP) {
 						memcpy( mb_mapping->tab_registers, b[activeId].data, LASTREG << 1 );
@@ -345,12 +344,21 @@ static void Slave(void)
 						//  printf( "-REG %d %d\n", (int)query[REGADR], (int)query[REGVAL]);
 						reg = query[REGADR];
 						if( activeId != 0 ){
+<<<<<<< HEAD
 
 						switch( reg ) {
 							case SRESET:	// set reset
 								if( query[REGVAL] & 0x1) { // temp
 									b[activeId].sCal[SRESET] |= 0x1;
 									resetTemp(activeId);
+=======
+							
+						switch( reg ) {								
+							case SRESET:
+								// set reset
+								if( query[REGVAL] & 0x1) { // temp	
+									b[activeId].sCal[SRESET] |= 0x1;					
+>>>>>>> e05c1d0184e9193e4501d0ba00098dbade4f6c9d
 								}
 								if( query[REGVAL] & 0x2) { // hum
 									b[activeId].sCal[SRESET] |= 0x2;
