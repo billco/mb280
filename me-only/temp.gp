@@ -21,8 +21,8 @@ set format x "%a %H:%M:%S"
 set yrange [*:*]
 #show timefmt
 
-set xtics rotate
-set multiplot
+
+
 set tmargin 4
 set bmargin  6
 set rmargin 2
@@ -32,13 +32,14 @@ set grid linetype 8 linewidth 1
 
 
 set tmargin 2
-set xtics rotate by -25                
-set ylabel "temp" 
-set autoscale y  
-#set tics 1
-# not work set ytics 0,.5,10
-#set ytics (60,.5,70)
-#show tics
+set xtics rotate by -25   
+set mytics 10        
+set mxtics 8        
+    
+set ylabel "Temp F" 
+set autoscale y 
+set ytics mirror
+set format y "%4.1f" 
 
 unset key
 

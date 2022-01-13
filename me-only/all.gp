@@ -4,6 +4,7 @@ set timefmt "%m/%d/%Y %H:%M:%S"
 set datafile separator ","
 set xdata time
 set xrange [*:*]
+
 #set xlabel "Time"
 set autoscale y  
 set format x "%a %H:%M:%S"  
@@ -26,7 +27,9 @@ set rmargin 2
 set lmargin 10
 set size 0.8, 0.90
 set grid
-
+set mytics 10        
+set mxtics 8        
+ 
 ##? bind "ctrl-a"          # shows the binding for ctrl-a
    ##?bind 
 
@@ -34,20 +37,20 @@ set grid
 set multiplot layout 1, 3 title "Multiplot layout 3, 1" font ",2"
 set tmargin 2
 set xtics rotate by -25                
-set ylabel "Temp" 
+set ylabel "Temp F" 
 set autoscale y  
 unset key
 plot "../bin/data/history4.csv" using 1:2 with lines linetype 1 linewidth 1
 #
 set xtics rotate by -25                
-set ylabel "Humdity"
+set ylabel "Humdity %"
 
 unset key
 plot "../bin/data/history4.csv" using 1:3 with lines linetype 2 linewidth 2
 #
 #
 set xtics rotate by -25                
-set ylabel "Pres" 
+set ylabel "Pres " 
 
 unset key
 plot "../bin/data/history4.csv" using 1:4 with lines linetype 2 linewidth 2
