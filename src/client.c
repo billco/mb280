@@ -12,6 +12,7 @@
 #define DEFCOLOR "\e[0;39;49m"
 #define UNDERLINEON "\e[4m"
 #define UNDERLINEOFF "\e[24m"
+#define HOME		"\e[H"
 
 int16_t data[LASTREG] = {0};
 int16_t data0[LASTREG] = {0};
@@ -47,6 +48,7 @@ void userHelp( void ){
 	printf("\tch # val -  Softcal temp\n");
 	printf("\tcp # val -  Softcal temp\n");
 	printf("\tl  val -  Set logging on slave 0-60 every minutes 0=off\n");				
+	printf("\tra # - reset All\n");
 	printf("\trt # - reset temp\n");
 	printf("\trh # - reset hum\n");
 	printf("\trt # - reset pres\n");
@@ -168,11 +170,11 @@ int main(int argc, char *argv[]) {
 	    if (numRead > 0) {
 	        if(buf[0] == 'q' ){
 				break;
-			} else if(buf[0] == 'r' ){
-				if(buf[1] == 't') intVal = 1;
-	  			if(buf[1] == 'h') intVal = 2;
-	  			if(buf[1] == 'p') intVal = 4;
-	  			
+			} else if(buf[0] == 'r' ){ 			// reset stats
+	  			if(buf[1] == 'a') intVal = 7;	// all
+				if(buf[1] == 't') intVal = 1;	// temp
+	  			if(buf[1] == 'h') intVal = 2;	// hum
+	  			if(buf[1] == 'p') intVal = 4;	// pres	  			
 	  			sscanf(buf +2, "%d", &Id);	  			
 	  			printf("id = %d %d %s\n", Id, intVal, buf);
 	  			// write reset
@@ -219,6 +221,7 @@ int main(int argc, char *argv[]) {
 	    } 
 	     
 	    // read sCal regs
+	    printf("%s", HOME);
 	    for( int ix = 0; ix < MAXLP; ++ix ){
 			modbus_set_slave(ctx, ix);
 	    
@@ -249,6 +252,7 @@ int main(int argc, char *argv[]) {
 				  //printf("log: %d\n", data0[8]);
 				  continue;
 			} 
+			
 			printf("%s%s%02d:%02d:%02d", BRIGHTWHITE,UNDERLINEON,
 				data[HOUR], data[MINIT], data[SEC] ); 
 			printf("  Cur       LOW        HI        AV       Scal        Raw  Bme:%d %s%s\n",
