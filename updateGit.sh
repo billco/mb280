@@ -7,4 +7,4 @@ pushd .
 git add .
 git commit -m "buh.."
 git push
-pop.
+popd .
