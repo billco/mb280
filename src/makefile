@@ -5,6 +5,8 @@
 BIN=../bin
 
 all: $(BIN)/mb280  slave.o bme280.o
+#OUTPUT_OPTION = -MMD -MP -o $@
+-include ${DEPS}
 
 # compiler
 CC=gcc
@@ -39,6 +41,10 @@ client: client.c client.o mc.h
    
 bme280.o:  bme280.c bme280.h
 	$(CC) -c $(CCFLAGS) bme280.c -o bme280.o
-		
+help:
+	-@echo "mb280 : make executable 'make'"
+	-@echo "client: make executable 'make client'"
+	-@echo "clean : delete all executables and object files 'make clean'"
+	
 clean:
 	rm -f *.o $(BIN)/mb280 $(BIN)/client
