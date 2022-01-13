@@ -4,14 +4,14 @@ Modbus tcp slave server for BME280 on PI-4b
 
 Support for 4 BME280 sensors use adr 76,76 both I2C busses
 
-uses 
-	libmodbus	5.1.0
+Requirements 
+	libmodbus	5.1.0 for slave & clent
 	
-	libwiringpi
+	libwiringpi	 for slave and rasberry PI(writen on PI-4b)
 
 target systems:
 
-    slave:    PI4b
+    slave:    PI
 	
 		make
 		

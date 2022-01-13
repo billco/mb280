@@ -333,8 +333,7 @@ static void Slave(void)
                                        
                    	// update modbus regs
                    	activeId = query[SLAVEID];
- //printf("activeId = %d\n", activeId );
-                   //	activeId = 0;
+ 
 
                    	if( activeId >= 0 && activeId <= MAXLP) {
 						memcpy( mb_mapping->tab_registers, b[activeId].data, LASTREG << 1 );
@@ -347,7 +346,8 @@ static void Slave(void)
 						if( activeId != 0 ){
 							
 						switch( reg ) {								
-							case SRESET:	// set reset
+							case SRESET:
+								// set reset
 								if( query[REGVAL] & 0x1) { // temp	
 									b[activeId].sCal[SRESET] |= 0x1;					
 								}

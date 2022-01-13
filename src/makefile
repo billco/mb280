@@ -6,7 +6,7 @@ BIN=../bin
 
 all: $(BIN)/mb280  slave.o bme280.o
 #OUTPUT_OPTION = -MMD -MP -o $@
--include ${DEPS}
+#-include ${DEPS}
 
 # compiler
 CC=gcc
