@@ -1,8 +1,8 @@
 // header for slave
 
 #ifndef __m_H__
-
-
+ 
+ 
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <time.h>
-
+  
 #include <pthread.h>
 #include <syslog.h>
 
@@ -49,8 +49,8 @@
 #define APRES	 17
 #define LASTREG	 (APRES+1)
 
- // input registers
-
+ // input registers 
+ 
 //slave Id 0  regs
 #define LOP_1	 0
 #define ADR_1	 1
@@ -82,10 +82,10 @@
 
 #define OFFSET		6
 
-#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query
-#define COMMAND 	(1+OFFSET) 	// command offset into query
-#define REGADR		(3+OFFSET) 	// command offset into query
-#define REGVAL		(5+OFFSET) 	// command offset into query
+#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query 
+#define COMMAND 	(1+OFFSET) 	// command offset into query 
+#define REGADR		(3+OFFSET) 	// command offset into query 
+#define REGVAL		(5+OFFSET) 	// command offset into query 
 
 #define FUNC6	6	//  modbus funtion write input register
 
@@ -95,15 +95,9 @@
 *	0 0x1 -  temp
 * 	1 0x2 - hum
 * 	2 0x4 - pres
-<<<<<<< HEAD
 *   3 0x10 - log file  
 * 
 * 
-=======
-*   3 0x10 - log file
-*
-*
->>>>>>> 63a8f604f8b078e67445c032818832b9e391d953
 */
 typedef struct {
 	int16_t data[LASTREG];		// modbus holding registers
@@ -116,7 +110,7 @@ typedef struct {
 #ifndef MAIN__
 #define ext extern
 #else
-#define ext
+#define ext 
 #endif
 
 
@@ -131,6 +125,8 @@ ext int  slaveId;
 ext time_t tt;
 ext struct tm tm;
 ext int loog;
+
+ext void archist( void );
 
 
 void retsetAll( void ) ;

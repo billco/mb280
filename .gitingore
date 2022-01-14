@@ -1,4 +1,3 @@
-*/backups/
-*/me-only/
-*/bin/*.o
-/updateGit.sh
+*/backups/*
+*/me-only/*
+*/data/*
