@@ -46,9 +46,9 @@ unset key
 plot "../bin/data/history4.csv" using 1:2 with lines linetype 1 linewidth 1
 #"../bin/data/history1.csv" using 1:2 with lines linetype 2 linewidth 2
  
-#while( 1 ) {
-#   repl
-#   pause 1 
-#   }
+while( 1 ) {
+   repl
+   pause 60 * 3 
+   }
 
 ## eof

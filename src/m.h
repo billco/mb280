@@ -1,8 +1,8 @@
 // header for slave
 
 #ifndef __m_H__
- 
- 
+
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <time.h>
-  
+
 #include <pthread.h>
 #include <syslog.h>
 
@@ -50,7 +50,7 @@
 #define LASTREG	 (APRES+1)
 
  // input registers 
- 
+
 //slave Id 0  regs
 #define LOP_1	 0
 #define ADR_1	 1
@@ -82,12 +82,12 @@
 
 #define OFFSET		6
 
-#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query 
-#define COMMAND 	(1+OFFSET) 	// command offset into query 
-#define REGADR		(3+OFFSET) 	// command offset into query 
-#define REGVAL		(5+OFFSET) 	// command offset into query 
+#define SLAVEID 	(0+OFFSET)	// slaveId offset into query
+#define COMMAND 	(1+OFFSET)	// command offset into query
+#define REGADR		(3+OFFSET)	// command offset into query
+#define REGVAL		(5+OFFSET)	// command offset into query
 
-#define FUNC6	6	//  modbus funtion write input register
+#define FUNC6	6		//  modbus funtion write input register
 
 #define MAXLP   5
 
@@ -100,43 +100,43 @@
 * 
 */
 typedef struct {
-	int16_t data[LASTREG];		// modbus holding registers
-	int16_t sCal[LASTS];		// modbus input registers
-	//char tag[20];		// string name
-	int loop;		// i2c bus 0
-	int adr ;		// bme280 address (0x76 or 0x77) | 0x80 = enabled
+    int16_t data[LASTREG];	// modbus holding registers
+    int16_t sCal[LASTS];	// modbus input registers
+    //char tag[20];         // string name
+    int loop;			// i2c bus 0
+    int adr;			// bme280 address (0x76 or 0x77) | 0x80 = enabled
 } bme280_t;
 
 #ifndef MAIN__
 #define ext extern
 #else
-#define ext 
+#define ext
 #endif
 
 
-ext   bme280_t b[MAXLP];
-ext  modbus_mapping_t *mb_mapping;
+ext bme280_t b[MAXLP];
+ext modbus_mapping_t *mb_mapping;
 
 ext char host[];
 
-ext int  port ;
-ext int  debug ;
-ext int  slaveId;
+ext int port;
+ext int debug;
+ext int slaveId;
 ext time_t tt;
 ext struct tm tm;
 ext int loog;
 
-ext void archist( void );
+ext void archist(void);
 
 
-void retsetAll( void ) ;
-void  init280(  void );
-int read280( int adr,float *temp, float *hum, float *pres);
-void WriteStat( void );
-void ReadStat( void );
-void WriteDefualts( void );
-void readDefualts( void );
-void writeLog( void );
-int IsOnScan( int ix );
+void retsetAll(void);
+void init280(void);
+int read280(int adr, float *temp, float *hum, float *pres);
+void WriteStat(void);
+void ReadStat(void);
+void WriteDefualts(void);
+void readDefualts(void);
+void writeLog(void);
+int IsOnScan(int ix);
 
 #endif

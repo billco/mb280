@@ -3,6 +3,7 @@
 # shep
 
 BIN=../bin
+SRC= .
 
 all: $(BIN)/mb280  slave.o bme280.o
 
@@ -23,7 +24,13 @@ CCFLAGS=$(DEBUG) $(OPT) $(WARN) $(PTHREAD) -pipe
 LD=gcc
 LDFLAGS=$(PTHREAD)  -export-dynamic -l modbus  -lm
 
-
+pp:
+	rm *.o
+	
+	-@indent -kr slave.c -o slave.c
+	-@indent -kr client.c -o client.c
+	-@indent -kr m.h -o m.h
+	-@indent -kr fdio.c -o fdio.c
  
 $(BIN)/mb280: slave.o bme280.o fdio.o
 	$(LD) -o $(BIN)/mb280 slave.o fdio.o bme280.o $(LDFLAGS) -lwiringPi

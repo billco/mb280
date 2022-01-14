@@ -1,3 +1,6 @@
 */backups/*
-*/me-only/*
-*/data/*
+/me-only/*
+/bin/data/*
+/src/*.o
+updateGit.sh
+

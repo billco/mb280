@@ -8,26 +8,27 @@ int file_exists(const char *filename)
 {
     FILE *fp = fopen(filename, "r");
     int is_exist = 0;
-    if (fp != NULL)
-    {
-        is_exist = 1;
-        fclose(fp); // close the file
+    if (fp != NULL) {
+	is_exist = 1;
+	fclose(fp);		// close the file
     }
     return is_exist;
 }
 
-void archist( void ){
+void archist(void)
+{
     /* ren cur history file to doy hist x .csv
      */
-     char buf[512] = {0};
-     char buf1[512] = {0};
-     for( int x = 1; x < MAXLP; ++ x ){	 
-	sprintf(buf, "./data/history%d.csv", x );
-	if (file_exists( buf)){
-	    sprintf(buf1, "./data/arc/%02d%02d%02dhist%d.csv", tm.tm_mon,tm.tm_mday,tm.tm_year, x );
+    char buf[512] = { 0 };
+    char buf1[512] = { 0 };
+    for (int x = 1; x < MAXLP; ++x) {
+	sprintf(buf, "./data/history%d.csv", x);
+	if (file_exists(buf)) {
+	    sprintf(buf1, "./data/arc/%02d%02d%02dhist%d.csv", tm.tm_mon,
+		    tm.tm_mday, tm.tm_year, x);
 	    rename(buf, buf1);
 	}
-     }
+    }
 }
 
 void readDefualts()

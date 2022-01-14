@@ -118,7 +118,7 @@ int main(void)
 	// reset stats at midnite
 	if (doreset)
 	    --doreset;
-//	if (!doreset && !tm.tm_hour && !tm.tm_min && !tm.tm_sec) {
+//      if (!doreset && !tm.tm_hour && !tm.tm_min && !tm.tm_sec) {
 	if (!doreset && tm.tm_hour == 0 && tm.tm_min == 0 && !tm.tm_sec) {
 	    retsetAll();
 	    archist();
@@ -167,6 +167,9 @@ void resetPres(int ix)
 void retsetAll(void)
 {
     for (int ix = 1; ix < MAXLP; ++ix) {
+	// force off-scan sensors
+	if (!IsOnScan(ix))
+	    b[ix].data[HOUR] = b[ix].data[MINIT] = b[ix].data[SEC] = 0;
 	resetHum(ix);
 	resetTemp(ix);
 	resetPres(ix);
@@ -285,7 +288,7 @@ static void Slave(void)
     ctx = modbus_new_tcp(host, port);
     //- modbus_set_response_timeout(ctx, 0, 500000);
     modbus_set_debug(ctx, debug);
- //   modbus_set_slave(ctx, slaveId);
+    //   modbus_set_slave(ctx, slaveId);
 
     // crate modbus memory map
     mb_mapping = modbus_mapping_new(MODBUS_MAX_READ_BITS, 0,
