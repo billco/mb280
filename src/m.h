@@ -100,11 +100,11 @@
 * 
 */
 typedef struct {
-    int16_t data[LASTREG];	// modbus holding registers
-    int16_t sCal[LASTS];	// modbus input registers
-    //char tag[20];         // string name
-    int loop;			// i2c bus 0
-    int adr;			// bme280 address (0x76 or 0x77) | 0x80 = enabled
+  int16_t data[LASTREG];	// modbus holding registers
+  int16_t sCal[LASTS];		// modbus input registers
+  //char tag[20];         // string name
+  int loop;			// i2c bus 0
+  int adr;			// bme280 address (0x76 or 0x77) | 0x80 = enabled
 } bme280_t;
 
 #ifndef MAIN__

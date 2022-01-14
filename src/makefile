@@ -23,14 +23,14 @@ CCFLAGS=$(DEBUG) $(OPT) $(WARN) $(PTHREAD) -pipe
 # linker
 LD=gcc
 LDFLAGS=$(PTHREAD)  -export-dynamic -l modbus  -lm
+PPFLAGS=-kr -ci2 -cli2 -i2 -l80
 
 pp:
-	rm *.o
-	
-	-@indent -kr slave.c -o slave.c
-	-@indent -kr client.c -o client.c
-	-@indent -kr m.h -o m.h
-	-@indent -kr fdio.c -o fdio.c
+	-@rm *.o	
+	-@indent $(PPFLAGS) slave.c -o slave.c
+	-@indent $(PPFLAGS) client.c -o client.c
+	-@indent $(PPFLAGS) m.h -o m.h
+	-@indent $(PPFLAGS) fdio.c -o fdio.c
  
 $(BIN)/mb280: slave.o bme280.o fdio.o
 	$(LD) -o $(BIN)/mb280 slave.o fdio.o bme280.o $(LDFLAGS) -lwiringPi
