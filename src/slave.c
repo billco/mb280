@@ -8,7 +8,6 @@
 static modbus_t *ctx = NULL;
 // modbus_mapping_t *mb_mapping;
 
-
 pthread_attr_t attr; 
 static void gager(void );
 pthread_t tGager = (pthread_t) NULL;
@@ -17,7 +16,6 @@ volatile int gagerRun = 1;
 pthread_attr_t attr2;
 static void Slave(void);
 pthread_t tSlave = (pthread_t) NULL;
-
 
 
  char host[20] = {0};
@@ -108,30 +106,28 @@ int main(void){
 	
 	
 	while(1) {
-		for(int  cur = 1; cur < MAXLP; ++cur){
-			// update global time stamp
-			tt 			= time(NULL);
-			tm 			= *localtime(&tt);
+		// update global time stamp
+		tt 			= time(NULL);
+		tm 			= *localtime(&tt);
+	
 		
-			
-			// reset stats at midnite
-			if ( doreset ) --doreset ;	
-			if(!doreset && !tm.tm_hour && !tm.tm_min && !tm.tm_sec )	{
-				retsetAll();
-				syslog (LOG_NOTICE, "Resetting stats\n");
-				doreset = 4;
-			} 
-			
-			// log data 
-			if ( dolog ) --dolog ;	
-			if( !dolog && loog ){
-				if(!(tm.tm_min % loog ) && !tm.tm_sec )	{
-					writeLog();
-					dolog = 4;
-				}
-			} 
-			usleep( 500000 );
-		}
+		// reset stats at midnite
+		if ( doreset ) --doreset ;	
+		if(!doreset && !tm.tm_hour && !tm.tm_min && !tm.tm_sec )	{
+			retsetAll();
+			syslog (LOG_NOTICE, "Resetting stats\n");
+			doreset = 4;
+		} 
+		
+		// log data 
+		if ( dolog ) --dolog ;	
+		if( !dolog && loog ){
+			if(!(tm.tm_min % loog ) && !tm.tm_sec )	{
+				writeLog();
+				dolog = 4;
+			}
+		} 
+		usleep( 500000 );
 	}
 }
 
@@ -219,7 +215,7 @@ static void gager(void )
 			
 		//printf("[%d} adr:%x\n", cur, b[cur].adr);
 
-			res = read280(  &temp,  &hum,  &pres);
+			res = read280( b[cur].adr, &temp,  &hum,  &pres);
 		 
 			if( res ) {
 				syslog (LOG_NOTICE,"Error read280 %d\n", res);
@@ -349,13 +345,16 @@ static void Slave(void)
 						switch( reg ) {								
 							case SRESET:	// set reset
 								if( query[REGVAL] & 0x1) { // temp	
-									b[activeId].sCal[SRESET] |= 0x1;					
+									b[activeId].sCal[SRESET] |= 0x1;	
+									resetTemp(activeId);				
 								}
 								if( query[REGVAL] & 0x2) { // hum	
-									b[activeId].sCal[SRESET] |= 0x2;													
+									b[activeId].sCal[SRESET] |= 0x2;
+									resetHum(activeId);													
 								}
 								if( query[REGVAL] & 0x4) { // pres	
 									b[activeId].sCal[SRESET] |= 0x4;												
+									resetPres(activeId);												
 								}
 								val = query[REGVAL];
 								mb_mapping->tab_input_registers[SRESET] = b[activeId].sCal[SRESET];
@@ -363,21 +362,17 @@ static void Slave(void)
 							case STEMP:	// scal temp
 								val = (query[REGVAL-1] << 8) | query[REGVAL];
 								b[activeId].sCal[STEMP] = (uint16_t)val;
-								break;
-								
+								break;								
 							case SHUM:	// scal hum
 								val = (query[REGVAL-1] << 8) | query[REGVAL];
 								b[activeId].sCal[SHUM] = (uint16_t)val;
-								break;
-								
+								break;								
 							case SPRES:	// scal pres					
 								val = (query[REGVAL-1] << 8) | query[REGVAL];
 								b[activeId].sCal[SPRES] = (uint16_t)val;
 								break;
-						
-								break;																	
-						}	
-					} else {
+												}	
+					} else { //slaveId 0
 						switch( reg ) {	
 							case LOP_1:
 							case LOP_2:
@@ -441,16 +436,12 @@ static void Slave(void)
 							case 0:
 								if( query[REGVAL] & 0x1) { // temp	
 									b[activeId].sCal[SRESET] &= !0x1;
-									resetTemp(activeId);
-
 								}
 								if( query[REGVAL] & 0x2) { // hum	
 									b[activeId].sCal[SRESET] &= !0x2;	
-									resetHum(activeId);
 								}
 								if( query[REGVAL] & 0x4) { // pres	
-									b[activeId].sCal[SRESET] &= !0x4;												
-									resetPres(activeId);
+									b[activeId].sCal[SRESET] &= !0x4;
 								}
 								
 							//	mb_mapping->tab_input_registers[SRESET] = b[activeId].sCal[SRESET];

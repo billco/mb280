@@ -91,8 +91,14 @@
 
 #define MAXLP   5
 
-
-
+/* SRESET bits
+*	0 0x1 -  temp
+* 	1 0x2 - hum
+* 	2 0x4 - pres
+*   3 0x10 - log file  
+* 
+* 
+*/
 typedef struct {
 	int16_t data[LASTREG];		// modbus holding registers
 	int16_t sCal[LASTS];		// modbus input registers
@@ -123,7 +129,7 @@ ext int loog;
 
 void retsetAll( void ) ;
 void  init280(  void );
-int read280( float *temp, float *hum, float *pres);
+int read280( int adr,float *temp, float *hum, float *pres);
 void WriteStat( void );
 void ReadStat( void );
 void WriteDefualts( void );
