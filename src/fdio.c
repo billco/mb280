@@ -24,7 +24,7 @@ void archist( void ){
      for( int x = 1; x < MAXLP; ++ x ){	 
 	sprintf(buf, "./data/history%d.csv", x );
 	if (file_exists( buf)){
-	    sprintf(buf1, "./data/%dhist%d.csv", tm.tm_yday, x );
+	    sprintf(buf1, "./data/arc/%02d%02d%02dhist%d.csv", tm.tm_mon,tm.tm_mday,tm.tm_year, x );
 	    rename(buf, buf1);
 	}
      }
