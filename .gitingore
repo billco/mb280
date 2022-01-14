@@ -1,2 +1,4 @@
 */backups/
 */me-only/
+*/bin/*.o
+/updateGit.sh
