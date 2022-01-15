@@ -31,6 +31,7 @@ pp:
 	-@indent $(PPFLAGS) client.c -o client.c
 	-@indent $(PPFLAGS) m.h -o m.h
 	-@indent $(PPFLAGS) fdio.c -o fdio.c
+	
  
 $(BIN)/mb280: slave.o bme280.o fdio.o
 	$(LD) -o $(BIN)/mb280 slave.o fdio.o bme280.o $(LDFLAGS) -lwiringPi
