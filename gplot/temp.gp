@@ -51,7 +51,9 @@ set mouse mouseformat 3
 #"../bin/data/history1.csv" using 1:2 with lines linetype 2 linewidth 2
  
 #while( 1 ) {
-  plot "../bin/data/history4.csv" using 1:2 with lines linetype 1 linewidth 1
+  plot "../bin/data/history4.csv" using 1:2 with lines linetype 1 linewidth 1 , \
+#'../bin/data/history4h.csv' using 1: int(column(4)) & 0x0xf00c ? 70: 40  with lines linetype 2 linewidth 2
+
  #  pause 60 * 3 
   # }
 

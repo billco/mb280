@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <math.h>
+#include <time.h>
 
 
 #define __m_H__
@@ -41,67 +42,67 @@
 // gme280 data modubus map
 #define NB_CONNECTION    5
 
-// holding registers
-#define HOUR	 0
-#define MINIT	 1
-#define SEC		 2
-#define TEMP	 3
-#define HUM		 4
-#define PRES	 5
-#define RTEMP	 6
-#define RHUM	 7
-#define RPRES	 8
-#define MTEMP	 9
-#define XTEMP	 10
-#define ATEMP	 11
-#define MHUM	 12
-#define XHUM	 13
-#define AHUM	 14
-#define MPRES	 15
-#define XPRES	 16
-#define APRES	 17
-#define LASTREG	 (APRES+1)
+#define BRIGHTWHITE "\e[1;37;40m"	// bold white black
+#define DIMWHITE "\e[2;37;40m"
+#define DEFCOLOR "\e[0;39;49m"
+#define UNDERLINEON "\e[4m"
+#define UNDERLINEOFF "\e[24m"
+#define HOME  "\e[H"
+#define ERASEDIS   "\e[0J"
+#define SAVE_CUR	"\es"
+#define RESTOR_CUR	"\eu"
+#ifndef MAIN__
+#define ext extern
+#else
+#define ext
+#endif
+typedef struct {
+  modbus_t *ctx;
+ // uint16_t  tab_reg[LASTREG];
+ // uint16_t  input_reg[LASTREG0];
+  int16_t   data[LASTREG];	// modbus holding registers
+  int16_t   data0[LASTREG];	// slave control holding registers
+  int16_t   sCal[LASTREG0];	// modbus input registers
+  char      host[20];
+  int       port;
+  int       open;
+  int       sensor;
+  
+} bme280_t;
 
-//slave Id 0 input regs
-#define LOP_1	 0
-#define ADR_1	 1
-#define LOP_2	 2
-#define ADR_2	 3
-#define LOP_3	 4
-#define ADR_3	 5
-#define LOP_4	 6
-#define ADR_4	 7
-#define SPARE_1	 8
-#define SPARE_2	 9
-#define SPARE_3	 10
-#define SPARE_4	 11
-#define SPARE_5  12
-#define SPARE_6  13
-#define SPARE_7  14
-#define SPARE_8	 15
-#define SPARE_9	 16
-#define SPARE_10 17
-#define LASTREG0	 (SPARE_10+1)
+ char      host[20] = "127.0.0.1";
+ int       port = 1502;
+ int       sensor;
 
- // input registers 
-#define SRESET	 0
-#define STEMP	 1
-#define SHUM	 2
-#define SPRES	 3
-#define SLOG	 4
-#define LASTS  (SLOG+1)
+// modbus_t *ctx;
+ uint16_t  tab_reg[LASTREG];
+ uint16_t  input_reg[LASTREG0];
+ #define MAXLP   4
+ 
+ext void RawDisPlay();
+ext  void ssDisPlay();
+ext  void asDisPlay( );
+ext  void hcDisPlay( );
+ext  void help(void);
+ext  void userHelp(void);
 
-#define OFFSET		6
+ bme280_t    b[MAXLP];
 
-#define SLAVEID 	(0+OFFSET) 	// slaveId offset into query 
-#define COMMAND 	(1+OFFSET) 	// command offset into query 
-#define REGADR		(3+OFFSET) 	// command offset into query 
-#define REGVAL		(5+OFFSET) 	// command offset into query 
+ int       debug = 0;
+ int       polRate = 500000;	// in uS ie 500ms
+ int       opt;
 
-#define FUNC6	6	//  modbus funtion write input register
-
-#define MAXLP   5
-
-
+ int       rc;
+ int      Id, curId;
+ int      reset = 0;
+ int       hideOffScan = 1;		// hide sensors off scan
+ void      disregs(int rc, int start, uint16_t * regs);
+ 	char      buf[256] = { 0 };
+  int newCmd = 0;
+ 	int       intVal = 0;
+ 	int       reg = 0;
+ 	float     val = 0;
+  
+ int curPg = 1;
 
 #endif
