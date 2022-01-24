@@ -1,7 +1,7 @@
-*/backups/*
-/me-only/*
-/bin/data/*
-/src/*.o
+backups/*
+me-only/*
+bin/data/*
+src/*.o
 updateGit.sh
-/bin/data/arc/*
+bin/data/arc/*
 

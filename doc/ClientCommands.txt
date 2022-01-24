@@ -1,37 +1,36 @@
-20.01.2022 19:10:45
+﻿                          Client Commands 
+                          
+  AS                    Alarm Summary Display page
+  HC                    Host Configuration Display page
+  SS                    Sensor Summary Display page
+  RD                    Raw modbus Data registers Display page
+  SD                    Sensor Detail Display page
 
-                          Client Commands 
-                          
-  AS                    Display Alarm SetPoint page
-  HC                    Display Host Configuration page
-  SS                    Display Sensor Summary page
-  
   q                     quit end
-  A ix xVal              ~set sensor remote address
-  L ix Val              set sensor remote Loop
-  l Val                 set log interval on remote slave global on slave
-  ack ix                 * acknowledge Detected Alarms 
+  a [ix] xVal           ~set sensor remote address
+  IP ix host port sensor set remote host IP(ip4) port sensor #
+  L [ix] Val            set log interval on remote slave global on slave
+  ack [ix]              * acknowledge Detected Alarms 
                           
-  am  ix xVal           sets alarm enable bits Mask 8f =
-                          Itemp = 01, hum = 02, pres = 04, auto ack  = 80
-  alt ix Val            low temp alarm set point
-  alh ix Val            low hum  alarm set point
-  ahp ix Val            low pres alarm set point 
-  aht ix Val            high temp alarm set point
-  ahh ix Val            high hum  alarm set point
-  ahp ix Val            high pres alarm set point 
-  ct ix Val             softcal temp
-  ch ix Val             softcal hum
-  cp ix Val             softcal pres
-  rt ix                 reset temp status
-  rh ix                 reset hum  status
-  rp ix                 reset pres status
+  am  [ix] xVal         sets alarm enable bits Mask 8f =
+                           Itemp = 01, hum = 02, pres = 04, auto ack  = 80
+  alt [ix] Val          low temp alarm set point
+  alh [ix] Val          low hum  alarm set point
+  ahp [ix] Val          low pres alarm set point 
+  aht [ix] Val          high temp alarm set point
+  ahh [ix] Val          high hum  alarm set point
+  ahp [ix] Val          high pres alarm set point 
+  ct  [ix] Val          softcal temp
+  ch  [ix] Val          softcal hum
+  cp  [ix] Val          softcal pres
+  l   [ix] Val          set sensor remote Loop
+  rt  [ix]              reset temp status
+  rh  [ix]              reset hum  status
+  rp  [ix]              reset pres status
   s x                   hide off scan sensors
 
-  Rh ix IP Port Sensor#   set Remote Host IP Port, sonsor #
-
 Notes:
-  ix = local sensor#
+  ix = local sensor#  [ix] not required on SD page
   val = parameter (99.9)
   xVal = hex
 

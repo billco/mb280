@@ -158,7 +158,7 @@ int closeOpenMb( int ix ){
 
 int initModBus( void ){
 ReadDefualts();
-  for (int ix = 0; ix <= MAXLP; ++ix) {
+  for (int ix = 0; ix < MAXLP; ++ix) {
     
     printf("ix:%d host={%s} port:%d sensor:%d \n", ix, b[ix].host, b[ix].port, b[ix].sensor);
 
@@ -229,7 +229,7 @@ int main(int argc, char *argv[]) {
     memset(buf, 0, sizeof(buf));
 
     printf("Starting\n");
-
+sleep( 3);
     // read sCal regs
     curPg = 1;
     while(1){
@@ -252,11 +252,14 @@ int main(int argc, char *argv[]) {
 	case 1:
 	  asDisPlay();
 	  break;
-      	case 2: 
+   	case 2: 
 	  hcDisPlay();
 	  break;
-       	case 3:
-	 RawDisPlay();
+   	case 3:
+	  RawDisPlay();
+	  break;
+   	case 4:
+	  sdDisPlay(&subPg);
 	  break;
       }
     
@@ -362,6 +365,7 @@ void RawDisPlay() {
   
 }
 
+
 void asDisPlay() {
 int alarmStat = 0;
   printf("%s%02d:%02d:%02d \t\t-Alarm Set Points-\t\t\t AS - Page \n",
@@ -372,8 +376,8 @@ int alarmStat = 0;
     printf("%s%s", BRIGHTWHITE, UNDERLINEON);
 
       printf
-	("Bme:%d     Cur    SP-LOW      SP-HI    Alarm   Scal   Raw IP:%s - %1d %s%s\n",
-	     ix+1, b[ix].host, b[ix].sensor, BRIGHTWHITE, UNDERLINEOFF);
+	("Bme:%d     Cur    SP-LOW      SP-HI    Alarm   Scal   Raw             %s%s\n",
+	     ix+1, BRIGHTWHITE, UNDERLINEOFF);
 
       
 	if (!IsOnScan(ix)) {
@@ -454,6 +458,87 @@ void ssDisPlay() {
   }
 }
 
+void
+ sdDisPlay( int* subPg ) {
+  if( *subPg < 1 || *subPg > MAXLP) { *subPg = 0; }
+  int  ix = *subPg - 1;
+  int	alarmStat = b[ix].data[ALSTAT] & 0x0000FFFF;
+
+  printf("%s%02d:%02d:%02d\t\t -----Sensor Detail----- \t\t SD - %d Page \n",
+	 BRIGHTWHITE,  tm.tm_hour, tm.tm_min, tm.tm_sec, ix+1);
+  printf("                             -----Temp-----\n");
+  printf("                  Cur       Min     MAX     Ave     sCal     Raw     \n");
+  printf("    Temp       %6.1f    %6.1f  %6.1f  %6.1f   %6.1f  %6.1f   \n",
+       ((float) b[ix].data[TEMP]) * 0.1,
+       ((float) b[ix].data[MTEMP]) * 0.1,
+       ((float) b[ix].data[XTEMP]) * 0.1, 
+       ((float) b[ix].data[ATEMP]) * 0.1,
+       ((float) b[ix].sCal[STEMP]) * 0.1,
+	   ((float) b[ix].data[RTEMP]) * 0.1
+	   ); 
+  printf("                  Low       High    |  Mask  | Auto-Ack | Enabled | \n"); 	   
+  printf("    Alarm/Stat %6.1f %3s %6.1f %3s   %04X       %s       %s \n",
+	     ((float) b[ix].sCal[ASP_TLO]) * 0.1, strIsLoTempAct(alarmStat),
+	     ((float) b[ix].sCal[ASP_THI]) * 0.1, strIsHiTempAct(alarmStat),
+	     alarmStat & ( ATBITS | AETEMBIT | AAUEBIT),
+	     (alarmStat & ( AAUEBIT) ?  "Yes" : "No "), 
+		(alarmStat & ( AETEMBIT) ?  "Yes" : "No ") );
+  printf("                             -----Hum-----\n");
+  printf("                  Cur       Min     MAX     Ave     sCal     Raw  \n");
+  printf("    Hum        %6.1f    %6.1f  %6.1f  %6.1f   %6.1f  %6.1f\n",
+        ((float) b[ix].data[HUM]) * 0.1,
+       ((float) b[ix].data[MHUM]) * 0.1,
+       ((float) b[ix].data[XHUM]) * 0.1, 
+       ((float) b[ix].data[AHUM]) * 0.1,
+       ((float) b[ix].sCal[SHUM]) * 0.1,
+	   ((float) b[ix].data[RHUM]) * 0.1
+	   ); 
+  printf("                 Low       High       Mask  | Auto-Ack | Enabled | \n"); 	   
+  printf("    Alarm/Stat %6.1f %3s %6.1f %3s   %04X       %s       %s \n",
+	     ((float) b[ix].sCal[ASP_HLO]) * 0.1, strIsLoHumAct(alarmStat),
+	     ((float) b[ix].sCal[ASP_HHI]) * 0.1, strIsHiHumAct(alarmStat),
+	     alarmStat & ( AHBITS | AEHUMBIT | AAUEBIT),
+	     (alarmStat & ( AAUEBIT) ?  "Yes" : "No "), 
+		(alarmStat & ( AEHUMBIT) ?  "Yes" : "No ") );
+
+  printf("                             -----Pres-----\n");
+  printf("                  Cur       Min     MAX     Ave     sCal     Raw\n");
+  printf("    Pres       %6.1f    %6.1f  %6.1f  %6.1f   %6.1f  %6.1f   \n",
+         ((float) b[ix].data[PRES]) * 0.1,
+       ((float) b[ix].data[MPRES])* 0.1,
+       ((float) b[ix].data[XPRES])* 0.1, 
+       ((float) b[ix].data[APRES])* 0.1,
+       ((float) b[ix].sCal[SPRES])* 0.1,
+	   ((float) b[ix].data[RPRES])* 0.1
+	   ); 
+  printf("                  Low       High    |  Mask  | Auto-Ack | Enabled | \n"); 	   
+  printf("    Alarm/Stat %6.1f %3s %6.1f %3s   %04X       %s       %s \n",
+	     ((float) b[ix].sCal[ASP_PLO]) * 0.1, strIsLoPresAct(alarmStat),
+	     ((float) b[ix].sCal[ASP_PHI]) * 0.1, strIsHiPresAct(alarmStat),
+	     alarmStat & ( APBITS | AEPRSBIT | AAUEBIT),
+	     (alarmStat & ( AAUEBIT) ?  "Yes" : "No "), 
+		(alarmStat & ( AEPRSBIT) ?  "Yes" : "No ") );
+  printf( "                      -----Host Configuration-----\n");
+  printf("  %s%sThis#         IP         Port Sensor#  Loop  Adrs Log Alarm Sam-Time%s\n",
+	      UNDERLINEON, BRIGHTWHITE, UNDERLINEOFF); 
+    printf("   %2d     %15s %5d    %1d       %1d    %2x   %2d  %4x %02d:%02d:%02d\n",
+    ix+1, b[ix].host, b[ix].port, b[ix].sensor, getLoop(ix), getAdr(ix),
+     b[ix].data0[8],
+	alarmStat,
+	b[ix].data[HOUR], b[ix].data[MINIT], b[ix].data[SEC]);
+  return ;
+
+  printf( "                             ----Host Data-----\n");
+  printf("slave Regs control:%d regs\n", b[ix].sensor);
+    disregs(SPARE_3, 0, (uint16_t *)b[ix].data0 );
+    
+    printf("slave Input Sensor:%d regs\n", b[ix].sensor);
+    disregs(LASTS, 0, (uint16_t *)b[ix].sCal );
+    
+    printf("slave Regs Sensor:%d regs\n", b[ix].sensor);
+    disregs(LASTREG, 0, (uint16_t *)b[ix].data );
+}
+
 void alrmSum( ){
 int aCnt = 0;
 int alarmStat = 0;
@@ -525,45 +610,88 @@ void help(void){
 }
 
 void userHelp(void) {
-  printf("\tA # val -  set address of BME# val I2C address\n \
-       \t\t(0,76,77) OR 0x80 = (0=disabled,f6,f7)\n");
-  printf("\tL # val -  set Loop of BME# val I2C bus 0|1\n");
-  printf("\tct # val -  Softcal temp\n");
-  printf("\tch # val -  Softcal temp\n");
-  printf("\tcp # val -  Softcal temp\n");
-  printf("\tl  val -  Set logging on slave 0-60 every minutes 0=off\n");
-  printf("\ts # - hide off scan sensors\n");
-  printf("\trt # - reset temp\n");
-  printf("\trh # - reset hum\n");
-  printf("\trt # - reset pres\n");
-  printf("\tq - quit\n");
-  printf("\t  # - Bme # = (1-4)\n");
+ 
+FILE  *fd = fopen("../doc/ClientCommands.txt", "r");
+  if (fd == NULL){
+	printf(" User help ../doc/ClientCommands.txt ");
+	return;
+  }
+  while( fgets(buf, 254, fd) != NULL) {
+	printf( "%s", buf);
+  }
+
+  fclose(fd);
 }
 
+int  parUsrFloat(char* ipStr, int* id, float* Val ){
+int c = 0;
+  if (curPg == SDPAGE){ 
+	c = sscanf( ipStr, " %f", Val);
+	*id = subPg;
+	return ++c;
+  }
+  c = sscanf( ipStr, " %d %f", id, Val);
+  return c;
+
+} 
+int  parUsrInt(char* ipStr, int* id, int* Val ){
+int c = 0;
+  if (curPg == SDPAGE){ 
+	c = sscanf( ipStr, " %d", Val);
+	*id = subPg;
+	return ++c;
+  }
+  c = sscanf( ipStr, " %d %d", id, Val);
+  return c;
+
+}
+int  parUsrHex(char* ipStr, int* id, int* Val ){
+int c = 0;
+  if (curPg == SDPAGE){ 
+	c = sscanf( ipStr, " %x", Val);
+	*id = subPg;
+	return ++c;
+  }
+  c = sscanf( ipStr, " %d %x", id, Val);
+  return c;
+
+}
 int doUser(){
+  int c = 0;
       newCmd = getUserIn(buf);
-		//printf("=[%s] %d \n", buf,newCmd);
+		//printf("=[%s] %d 0:%c 1:%c 2:%c 3:%c 4:%c \n",  buf,newCmd,
+		//buf[0], buf[1], buf[2], buf[3], buf[4]
+		//);
 		
   if ( newCmd && buf[0] == 0 && buf[0] != 0) return 1;
-	
+  
+  if ( buf[0] == 'U' && buf[1] == '\n') { // UP arrow 
+	  subPg = (--subPg < 1 ) ? 1 : subPg; return 1;}
+  if ( buf[0] == 'D' && buf[1] == '\n' ) { // DOWN arrow 
+	  subPg = (++subPg >= MAXLP ) ? MAXLP : subPg; return 1;}
+  // check for Page s changes
   if (buf[0] == 'H' && buf[1] == 'C'){
-     curPg = 2; return 1;
+	  curPg = HCPAGE; return 1;
   } else if (buf[0] == 'S' && buf[1] == 'S'){ 
-    curPg = 0; return 1;
+	  curPg = SSPAGE; return 1;
   } else if (buf[0] == 'A' && buf[1] == 'S'){
-     curPg = 1; return 1;
+	  curPg = ASPAGE; return 1;
   } else if (buf[0] == 'R' && buf[1] == 'D'){
-     curPg = 3; return 1;
-  }
-  if (buf[0] == 'a' && buf[1] == 'c' && buf[2] == 'k'){ // ack alarm
+	  curPg = RDPAGE; return 1;
+  } else if (buf[0] == 'S' && buf[1] == 'D'){
+	  c = sscanf(buf+3," %d", &subPg);
+	  if( c != 1 || subPg < 0 || subPg > MAXLP) subPg = 1;
+      curPg = SDPAGE; return 1;
+  // ack alarms
+  } if (buf[0] == 'a' && buf[1] == 'c' && buf[2] == 'k'){ // ack alarm
       sscanf(buf+3,"%d", &Id);
        sendIt(Id-1, 0, ACKALRM, 1); return 1;
-  }
-  if (buf[0] == 'I' && buf[1] == 'P'){ // ack alarm
+  // set IP host port sensor
+  } if (buf[0] == 'i' && buf[1] == 'p'){ 
     sscanf(buf + 2, "%d %s %d %d", &Id, host, &port, &sensor); 
     Id=1; 
     printf("id = %d host:%s port:%d sensor:%d buf:%s\n", Id, host, port, sensor, buf);
-    if( Id > 0 && Id <= 4 ){
+    if( Id > 0 && Id <= MAXLP ){
       --Id;
       strcpy(b[Id].host, host);
       b[Id].port = port;
@@ -573,112 +701,91 @@ int doUser(){
       sleep(5);
     }      
   }
-  
+  // quit
   if (buf[0] == 'q') { WriteDefualts(); return 0;} 
   if (buf[0] == 's') {	// hide off scan sensors
     sscanf(buf + 2, " %d", &hideOffScan);
     printf("%s%s", HOME, ERASEDIS);
-  } else if (buf[0] == 'r') {	// reset 
-    if (buf[1] == 't')	// temp
-      intVal = 1;
-    if (buf[1] == 'h')	// hum
-      intVal = 2;
-    if (buf[1] == 'p')	// pres
-      intVal = 4;
-
-    sscanf(buf + 2, "%d", &Id);
-    printf("id = %d %d %s\n", Id, intVal, buf);
-      // write reset
+  // reset
+  } else if (buf[0] == 'r') {	 
+   	switch( buf[1] ) {
+	  case 't': intVal = 1;break; 
+	  case 'h': intVal = 2;break;
+	  case 'p': intVal = 4; break;
+	}	  
+	c = parUsrInt(buf+3,&Id,&reset);
+	printf("id = %d %d %s c:%d\n", Id, intVal, buf, c);
     sendIt(Id-1,Id, SRESET, intVal);
-  } else if (buf[0] == 'a' && buf[1] == 'm') {	// set alarm mask 
-        sscanf(buf + 2, "%d %x", &Id, &intVal);
-    printf("am id = %d %x %s\n", Id, intVal, buf);
-      // write reset
-    sendIt(Id-1,Id, ALSTAT, intVal);
-  } else if (buf[0] == 'l') {	// set logging
-    sscanf(buf + 2, " %d", &intVal);
+  // set alarm mask
+  } else if (buf[0] == 'a' && buf[1] == 'm') { 
+    //  if (curPg == SDPAGE) Id = subPg; else sscanf(buf + 2, "%d %x", &Id, &intVal);
+	  c = parUsrHex(buf+2,&Id,&intVal);
+	  printf("am id = %d intval:%x c:%d\n", Id, intVal, c);
+	  sendIt(Id-1,Id, ALSTAT, intVal);
+  // set logging
+  } else if (buf[0] == 'L') {	
+	c = parUsrHex( buf+1,  &Id,  &intVal );
     printf("  log: %d \n", intVal);
-      // write log val
     sendIt(0, 0, 8, intVal);
-  } else if (buf[0] == 'c') {	// soft cal scal
-    if (buf[1] == 't')	// temp
-	    reset = 1;
-    if (buf[1] == 'h')	// hum
-	    reset = 2;
-    if (buf[1] == 'p')	// pres
-	    reset = 3;
-    sscanf(buf + 2, "%d %f", &Id, &val);
-    printf("id = %d cal = %3.1f\n", Id, val);
-    // write sCal
+	// soft cal scal
+  } else if (buf[0] == 'c') {	
+    switch( buf[1] ) {
+	  case 't': reset = STEMP; break;
+	  case 'h': reset = SHUM; break;
+	  case 'p': reset = SPRES; break;
+	}
+	c = parUsrFloat( buf+2,  &Id,  &val );
+    printf("id = %d cal = %3.1f c:%d\n", Id, val, c);
     sendIt(Id-1,Id, reset, (uint16_t) (int) (ceil(val * 10.0)));
-    return 1;
-
   } else if (buf[0] == 'a' && buf[1] == 'l') {	// set alarm points low
-    if (buf[2] == 't')	// temp
-	    reset = ASP_TLO;
-    if (buf[2] == 'h')	// hum
-	    reset = ASP_HLO;
-    if (buf[2] == 'p')	// pres
-	    reset = ASP_PLO;
-    sscanf(buf + 4, "%d %f", &Id, &val);
-    printf("id = %d alo = %3.1f\n", Id, val);
+	switch( buf[2] ) {
+	  case 't': reset = ASP_TLO;break;
+	  case 'h': reset = ASP_HLO;break;
+	  case 'p': reset = ASP_PLO; break;
+	}		
+	c = parUsrFloat( buf+4,  &Id,  &val );
+
+    printf("id = %d alo = %3.1f c:%d\n", Id, val, c);
     // write alrm lo
     sendIt(Id-1,Id, reset, (uint16_t) (int) (ceil(val * 10.0)));
         return 1;
-
-  } else if (buf[0] == 'a' && buf[1] == 'h') {	// set alarm points high
-      
-    if (buf[2] == 't')	// temp
-	    reset = ASP_THI;
-    if (buf[2] == 'h')	// hum
-	    reset = ASP_HHI;
-    if (buf[2] == 'p')	// pres
-	    reset = ASP_PHI;
-    sscanf(buf + 4, "%d %f", &Id, &val);
-    printf("id = %d ahi = %3.1f\n", Id, val);
-    // write alrm hi
+// set alarm points high
+  } else if (buf[0] == 'a' && buf[1] == 'h') {	
+	switch( buf[2] ) {
+	  case 't': reset = ASP_THI; break;
+	  case 'h': reset = ASP_HHI; break;
+	  case 'p': reset = ASP_PHI; break;
+	}
+    c = parUsrFloat( buf+4,  &Id,  &val );
+	printf("id = %d ahi = %3.1f\n", Id, val);
     sendIt(Id-1,Id, reset, (uint16_t) (int) (ceil(val * 10.0)));
-  } else if (buf[0] == 'A') {	// set Address
-    sscanf(buf + 1, " %d %x", &Id, &reset);
+	// set Address
+  } else if (buf[0] == 'a' && buf[1] !='\n') {	
+	
+	c = parUsrHex( buf+1,  &Id,  &reset); 
     switch (Id) {
-      case 1:
-	reg = ADR_1;
-	break;
-      case 2:
-	reg = ADR_2;
-	break;
-      case 3:
-	reg = ADR_3;
-	break;
-      case 4:
-	reg = ADR_4;
-	break;
+      case 1: reg = ADR_1;break;
+      case 2: reg = ADR_2;break;
+      case 3: reg = ADR_3;break;
+      case 4: reg = ADR_4;break;
     }
-    printf("reg %d adr = %d\n", reg, reset);
-    // write Adr 
+    printf("reg %d adr = %d c:%d\n", reg, reset, c);
     sendIt(0,0, reg, reset);
-  } else if (buf[0] == 'L') {	// set loop
-    sscanf(buf + 1, " %d %d", &Id, &reset);
+  } else if (buf[0] == 'l' && buf[1] != '\n') {	// set loop
+	c = parUsrInt( buf+1,  &Id,  &reset );
+  //  sscanf(buf + 1, " %d %d", &Id, &reset);
     switch (Id) {
-      case 1:
-	      reg = LOP_1;
-	      break;
-      case 2:
-	      reg = LOP_2;
-	      break;
-      case 3:
-	      reg = LOP_3;
-	      break;
-      case 4:
-	      reg = LOP_4;
-	      break;
+      case 1: reg = LOP_1; break;
+      case 2: reg = LOP_2; break;
+      case 3: reg = LOP_3; break;
+      case 4: reg = LOP_4; break;
     }
     printf("reg %d lop = %d\n", reg, reset);
     // write log
     sendIt(0,0, reg, reset);
     } else if (buf[0] == 'h') {
       userHelp();
-      sleep(10);
+      sleep(5);
   }
  ;
   return 1;

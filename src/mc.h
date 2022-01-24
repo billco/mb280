@@ -51,6 +51,14 @@
 #define ERASEDIS   "\e[0J"
 #define SAVE_CUR	"\es"
 #define RESTOR_CUR	"\eu"
+#define SSPAGE 0
+#define ASPAGE 1
+#define HCPAGE 2
+#define RDPAGE 3
+#define SDPAGE 4
+
+ 
+
 #ifndef MAIN__
 #define ext extern
 #else
@@ -77,32 +85,38 @@ typedef struct {
 // modbus_t *ctx;
  uint16_t  tab_reg[LASTREG];
  uint16_t  input_reg[LASTREG0];
- #define MAXLP   4
+#define MAXLP   4
  
-ext void RawDisPlay();
+ext void  RawDisPlay();
 ext  void ssDisPlay();
 ext  void asDisPlay( );
 ext  void hcDisPlay( );
+ext void  sdDisPlay(int * );
+ext int parUsrFloat(char* ipStr, int* id, float* Val );
+ext int parUsrInt(char* ipStr, int* id, int* Val );
+ext int parUsrHex(char* ipStr, int* id, int* Val );
+
 ext  void help(void);
 ext  void userHelp(void);
 
- bme280_t    b[MAXLP];
+bme280_t    b[MAXLP];
 
- int       debug = 0;
- int       polRate = 500000;	// in uS ie 500ms
- int       opt;
+int       debug = 0;
+int       polRate = 500000;	// in uS ie 500ms
+int       opt;
 
- int       rc;
- int      Id, curId;
- int      reset = 0;
- int       hideOffScan = 1;		// hide sensors off scan
- void      disregs(int rc, int start, uint16_t * regs);
- 	char      buf[256] = { 0 };
-  int newCmd = 0;
- 	int       intVal = 0;
- 	int       reg = 0;
- 	float     val = 0;
-  
- int curPg = 1;
+int       rc;
+int      Id, curId;
+int      reset = 0;
+int       hideOffScan = 1;		// hide sensors off scan
+void      disregs(int rc, int start, uint16_t * regs);
+char      buf[256] = { 0 };
+int newCmd = 0;
+int       intVal = 0;
+int       reg = 0;
+float     val = 0;
+
+int curPg = 1;   //current display page
+int subPg = 0;   // subPg for display page
 
 #endif
